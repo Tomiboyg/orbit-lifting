@@ -9,7 +9,6 @@ import { useRecommendation } from '../hooks/useRecommendation'
 import { fetchSetsSince, fetchWorkouts, type WorkoutRecord } from '../lib/history'
 import { checkOtherDeviceWorkout, discardOtherWorkout, resumeOtherWorkout, type OtherWorkout } from '../lib/crossDevice'
 import { formatDay, weekStartOf } from '../lib/time'
-import { CrabDoodle } from '../components/ui'
 
 export function Dashboard() {
   const user = useAuth((s) => s.user)

@@ -139,7 +139,6 @@ export async function processOutbox(): Promise<SyncResult> {
 
   const entries = await outboxAll()
   let ok = 0
-  let skipped = 0
   let failed = 0
 
   for (const entry of entries) {
@@ -186,7 +185,8 @@ export async function processOutbox(): Promise<SyncResult> {
     }
   }
 
-  return { ok, skipped, failed }
+  // Skipped = entries not attempted (e.g. signed-out sessions return early).
+  return { ok, skipped: Math.max(0, entries.length - ok - failed), failed }
 }
 
 /** True when the server has a synced copy of this workout (no pending outbox entry). */

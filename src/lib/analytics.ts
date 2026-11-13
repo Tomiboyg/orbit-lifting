@@ -1,6 +1,6 @@
 /** Aggregations shared by analytics and the recommendation engine. */
 
-import type { LoggedSet, SetType, ExerciseDef } from '../types'
+import type { SetType, ExerciseDef } from '../types'
 import { MS_DAY, startOfDay, weekStartOf, type WeekSpan } from './time'
 
 /** Estimated 1RM (Epley formula). For bodyweight/unweighted rows returns 0. */

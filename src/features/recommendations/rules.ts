@@ -224,7 +224,7 @@ export const frequencyRule: Rule = {
   id: 'R-02-FREQUENCY-REVIEW',
   version: 1,
   priority: 3,
-  evaluate({ input, settings }) {
+  evaluate({ input }) {
     if (input.completedWeeks.length < 2) return null
     const overall = input.actualAvgPerWeek
     if (overall < 1.5) return null
