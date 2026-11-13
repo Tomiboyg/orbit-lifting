@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -27,7 +27,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          # npm caching needs a lockfile, which doesn't exist on the very first
+          # run only — the conditional disables caching until it is committed.
+          cache: ${{ hashFiles('package-lock.json') == '' ? '' : 'npm' }}
+
+      # One-time bootstrap: this project is built without a local Node install,
+      # so the lockfile is generated and committed by CI itself. After this
+      # first run, package-lock.json lives in the repo and every future run
+      # installs from it (npm ci = fully reproducible builds).
+      - name: Generate + commit package-lock.json (first run only)
+        if: ${{ hashFiles('package-lock.json') == '' }}
+        run: |
+          npm install --package-lock-only
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore: add package-lock.json [skip ci]"
+          git push
 
       - name: Install dependencies
         run: npm ci
