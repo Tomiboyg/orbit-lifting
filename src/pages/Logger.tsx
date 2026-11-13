@@ -447,7 +447,7 @@ function SetRow({
     } catch {
       // Haptics unsupported — fine.
     }
-    useWorkout.getState().confirmSet(exercise.id, set.id, useSettings.getState().defaultRestSec)
+    useWorkout.getState().confirmSet(exercise.id, set.id, useSettings.getState().settings.defaultRestSec)
   }
   const remove = () => useWorkout.getState().deleteSet(exercise.id, set.id)
 

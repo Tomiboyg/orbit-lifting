@@ -199,7 +199,8 @@ export function useRecommendation() {
   const dismiss = useCallback((reason: string) => {
     const cur = loadStored()
     if (!cur) return
-    const next: StoredRec = { ...cur, dismissed: { at: Date.now(), reason } }
+    const dismissal = { at: Date.now(), reason }
+    const next: StoredRec = { ...cur, dismissed: dismissal }
     saveStored(next)
     // Cooldown record (spec 10.9).
     const dismissals = [
@@ -208,7 +209,7 @@ export function useRecommendation() {
         type: next.result?.type ?? 5,
         ruleId: next.result?.ruleId ?? 'none',
         weekStart: next.weekStart,
-        dismissedAt: next.dismissed.at,
+        dismissedAt: dismissal.at,
       },
     ]
     try {

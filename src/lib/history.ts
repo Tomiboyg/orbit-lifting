@@ -66,6 +66,7 @@ export async function fetchSetsSince(sinceTs: number): Promise<RawSet[]> {
       reps: number | null
       rpe: number | null
       set_type: string
+      completed: boolean
       performed_at: string | null
       workout_exercises: { name: string } | { name: string }[] | null
     }
