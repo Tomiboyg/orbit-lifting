@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import type { RawSet } from '../lib/analytics'
 import type { SetType, ExerciseDef } from '../types'
-import type { RecommendationSettings } from '../store/settings'
-import { DEFAULT_SETTINGS } from '../store/settings'
+import type { RecommendationSettings } from '../../store/settings'
+import { DEFAULT_SETTINGS } from '../../store/settings'
 import { computeRecommendation } from './engine'
 
 const DAY = 86_400_000
