@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0b0e14" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#eef1f6" media="(prefers-color-scheme: light)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Orbit Lifting" />
+    <meta
+      name="description"
+      content="Orbit Lifting — a calm, mobile-first workout tracker. Educational training insights only, not medical advice."
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+    <title>Orbit Lifting</title>
+    <script>
+      // Apply theme + colourway before first paint to avoid a flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('orbit.theme') || 'auto';
+          var dark =
+            t === 'dark' ||
+            (t !== 'light' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+          var c = localStorage.getItem('orbit.colourway') || 'graphite';
+          document.documentElement.dataset.colourway = c;
+          if (localStorage.getItem('orbit.reduceTransparency') === 'true') {
+            document.documentElement.classList.add('reduce-transparency');
+          }
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+          document.documentElement.dataset.colourway = 'graphite';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

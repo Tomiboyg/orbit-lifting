@@ -1,0 +1,25 @@
+node_modules
+dist
+dist-ssr
+coverage
+*.local
+
+# env files (real values live in GitHub Actions secrets)
+.env
+.env.*
+!.env.example
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+# playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# supabase
+supabase/.temp

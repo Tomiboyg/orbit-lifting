@@ -1,0 +1,205 @@
+/* ==========================================================================
+   Orbit Lifting design tokens (spec 14.2)
+   Defined once as CSS variables, consumed through Tailwind.
+   ========================================================================== */
+
+:root {
+  --radius-control: 12px;
+  --radius-card: 20px;
+  --radius-hero: 28px;
+  --blur: 24px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 220ms;
+  --dur-sheet: 420ms;
+}
+
+/* --------------------------------------------------------------------------
+   Theme: light / dark glass surfaces (spec 14.2)
+   -------------------------------------------------------------------------- */
+
+:root[data-theme='dark'] {
+  --glass-bg: rgba(255, 255, 255, 0.13);
+  --glass-bg-strong: rgba(255, 255, 255, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --solid-surface: #12151d;
+  --solid-surface-2: #1a1f2b;
+  --text-primary: #f2f5fa;
+  --text-muted: #a3abb8;
+  --dim-backdrop: rgba(3, 5, 9, 0.6);
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.74);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --solid-surface: #f3f5f9;
+  --solid-surface-2: #ffffff;
+  --text-primary: #161a22;
+  --text-muted: #565f6e;
+  --dim-backdrop: rgba(18, 22, 30, 0.35);
+  --shadow-color: rgba(20, 26, 38, 0.14);
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   Colourways — accent + background colour fields for both modes (spec 14.2)
+   -------------------------------------------------------------------------- */
+
+/* Graphite (default) */
+:root[data-colourway='graphite'] {
+  --bg-base-dark: #0b0e14;
+  --bg-base-light: #eceef4;
+  --bg-a-dark: rgba(91, 108, 255, 0.28);
+  --bg-b-dark: rgba(56, 189, 248, 0.16);
+  --bg-c-dark: rgba(167, 139, 250, 0.18);
+  --bg-a-light: rgba(91, 108, 255, 0.18);
+  --bg-b-light: rgba(56, 189, 248, 0.14);
+  --bg-c-light: rgba(167, 139, 250, 0.12);
+}
+:root[data-colourway='graphite'][data-theme='dark'] {
+  --accent: #9db1ff;
+  --accent-soft: rgba(157, 177, 255, 0.16);
+  --accent-glow: rgba(91, 108, 255, 0.35);
+  --accent-contrast: #0b0e14;
+}
+:root[data-colourway='graphite'][data-theme='light'] {
+  --accent: #4353d9;
+  --accent-soft: rgba(67, 83, 217, 0.12);
+  --accent-glow: rgba(67, 83, 217, 0.28);
+  --accent-contrast: #ffffff;
+}
+
+/* Ocean */
+:root[data-colourway='ocean'] {
+  --bg-base-dark: #081019;
+  --bg-base-light: #e9f0f4;
+  --bg-a-dark: rgba(14, 165, 199, 0.3);
+  --bg-b-dark: rgba(45, 212, 191, 0.14);
+  --bg-c-dark: rgba(59, 130, 246, 0.16);
+  --bg-a-light: rgba(14, 165, 199, 0.16);
+  --bg-b-light: rgba(45, 212, 191, 0.14);
+  --bg-c-light: rgba(59, 130, 246, 0.1);
+}
+:root[data-colourway='ocean'][data-theme='dark'] {
+  --accent: #4fc7e8;
+  --accent-soft: rgba(79, 199, 232, 0.16);
+  --accent-glow: rgba(14, 165, 199, 0.35);
+  --accent-contrast: #06131a;
+}
+:root[data-colourway='ocean'][data-theme='light'] {
+  --accent: #0b7d9c;
+  --accent-soft: rgba(11, 125, 156, 0.12);
+  --accent-glow: rgba(11, 125, 156, 0.25);
+  --accent-contrast: #ffffff;
+}
+
+/* Aurora */
+:root[data-colourway='aurora'] {
+  --bg-base-dark: #081411;
+  --bg-base-light: #eaf3ee;
+  --bg-a-dark: rgba(16, 185, 129, 0.26);
+  --bg-b-dark: rgba(52, 211, 153, 0.14);
+  --bg-c-dark: rgba(125, 211, 252, 0.14);
+  --bg-a-light: rgba(16, 185, 129, 0.14);
+  --bg-b-light: rgba(52, 211, 153, 0.12);
+  --bg-c-light: rgba(125, 211, 252, 0.1);
+}
+:root[data-colourway='aurora'][data-theme='dark'] {
+  --accent: #43d9a5;
+  --accent-soft: rgba(67, 217, 165, 0.16);
+  --accent-glow: rgba(16, 185, 129, 0.32);
+  --accent-contrast: #04120d;
+}
+:root[data-colourway='aurora'][data-theme='light'] {
+  --accent: #0f8f66;
+  --accent-soft: rgba(15, 143, 102, 0.12);
+  --accent-glow: rgba(15, 143, 102, 0.24);
+  --accent-contrast: #ffffff;
+}
+
+/* Ember */
+:root[data-colourway='ember'] {
+  --bg-base-dark: #140d08;
+  --bg-base-light: #f4ede8;
+  --bg-a-dark: rgba(249, 115, 22, 0.26);
+  --bg-b-dark: rgba(251, 191, 36, 0.14);
+  --bg-c-dark: rgba(244, 63, 94, 0.14);
+  --bg-a-light: rgba(249, 115, 22, 0.14);
+  --bg-b-light: rgba(251, 191, 36, 0.12);
+  --bg-c-light: rgba(244, 63, 94, 0.1);
+}
+:root[data-colourway='ember'][data-theme='dark'] {
+  --accent: #ffa666;
+  --accent-soft: rgba(255, 166, 102, 0.16);
+  --accent-glow: rgba(249, 115, 22, 0.32);
+  --accent-contrast: #1a0e04;
+}
+:root[data-colourway='ember'][data-theme='light'] {
+  --accent: #c94f0a;
+  --accent-soft: rgba(201, 79, 10, 0.12);
+  --accent-glow: rgba(201, 79, 10, 0.24);
+  --accent-contrast: #ffffff;
+}
+
+/* Sakura */
+:root[data-colourway='sakura'] {
+  --bg-base-dark: #130a10;
+  --bg-base-light: #f5edf1;
+  --bg-a-dark: rgba(236, 72, 153, 0.24);
+  --bg-b-dark: rgba(251, 113, 133, 0.14);
+  --bg-c-dark: rgba(167, 139, 250, 0.16);
+  --bg-a-light: rgba(236, 72, 153, 0.12);
+  --bg-b-light: rgba(251, 113, 133, 0.12);
+  --bg-c-light: rgba(167, 139, 250, 0.1);
+}
+:root[data-colourway='sakura'][data-theme='dark'] {
+  --accent: #ff9ec6;
+  --accent-soft: rgba(255, 158, 198, 0.16);
+  --accent-glow: rgba(236, 72, 153, 0.3);
+  --accent-contrast: #1c0710;
+}
+:root[data-colourway='sakura'][data-theme='light'] {
+  --accent: #c04a77;
+  --accent-soft: rgba(192, 74, 119, 0.12);
+  --accent-glow: rgba(192, 74, 119, 0.22);
+  --accent-contrast: #ffffff;
+}
+
+/* Resolve base background vars per theme. */
+:root[data-theme='dark'] {
+  --bg-base: var(--bg-base-dark);
+  --bg-a: var(--bg-a-dark);
+  --bg-b: var(--bg-b-dark);
+  --bg-c: var(--bg-c-dark);
+}
+:root[data-theme='light'] {
+  --bg-base: var(--bg-base-light);
+  --bg-a: var(--bg-a-light);
+  --bg-b: var(--bg-b-light);
+  --bg-c: var(--bg-c-light);
+}
+
+/* --------------------------------------------------------------------------
+   Reduce transparency (spec 11.3 / 14.8): glass becomes solid surfaces.
+   -------------------------------------------------------------------------- */
+
+.reduce-transparency,
+.reduce-transparency * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.reduce-transparency {
+  --glass-bg: var(--solid-surface);
+  --glass-bg-strong: var(--solid-surface-2);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-bg: var(--solid-surface);
+    --glass-bg-strong: var(--solid-surface-2);
+  }
+}

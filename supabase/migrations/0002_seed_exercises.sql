@@ -1,0 +1,33 @@
+-- Seed the global (read-only) exercise library. user_id = null → visible to all.
+insert into public.exercises (user_id, name, category, primary_muscles, secondary_muscles)
+values
+  (null, 'Barbell Bench Press', 'Push',  '{chest}', '{triceps,shoulders}'),
+  (null, 'Incline Dumbbell Press', 'Push', '{chest}', '{triceps,shoulders}'),
+  (null, 'Cable Fly', 'Push', '{chest}', '{shoulders}'),
+  (null, 'Push-up', 'Push', '{chest}', '{triceps,core}'),
+  (null, 'Overhead Press', 'Push', '{shoulders}', '{triceps}'),
+  (null, 'Dumbbell Lateral Raise', 'Push', '{shoulders}', '{}'),
+  (null, 'Face Pull', 'Pull', '{shoulders}', '{back}'),
+  (null, 'Pull-up', 'Pull', '{back}', '{biceps}'),
+  (null, 'Lat Pulldown', 'Pull', '{back}', '{biceps}'),
+  (null, 'Barbell Row', 'Pull', '{back}', '{biceps}'),
+  (null, 'Seated Cable Row', 'Pull', '{back}', '{biceps}'),
+  (null, 'Deadlift', 'Pull', '{back}', '{hamstrings,glutes}'),
+  (null, 'Barbell Curl', 'Pull', '{biceps}', '{}'),
+  (null, 'Dumbbell Hammer Curl', 'Pull', '{biceps}', '{}'),
+  (null, 'Triceps Pushdown', 'Push', '{triceps}', '{}'),
+  (null, 'Skull Crusher', 'Push', '{triceps}', '{}'),
+  (null, 'Barbell Squat', 'Legs', '{quads}', '{glutes,core}'),
+  (null, 'Front Squat', 'Legs', '{quads}', '{glutes,core}'),
+  (null, 'Leg Press', 'Legs', '{quads}', '{glutes}'),
+  (null, 'Bulgarian Split Squat', 'Legs', '{quads}', '{glutes}'),
+  (null, 'Leg Extension', 'Legs', '{quads}', '{}'),
+  (null, 'Romanian Deadlift', 'Legs', '{hamstrings}', '{glutes,back}'),
+  (null, 'Leg Curl', 'Legs', '{hamstrings}', '{}'),
+  (null, 'Hip Thrust', 'Legs', '{glutes}', '{hamstrings}'),
+  (null, 'Standing Calf Raise', 'Legs', '{calves}', '{}'),
+  (null, 'Seated Calf Raise', 'Legs', '{calves}', '{}'),
+  (null, 'Plank', 'Core', '{core}', '{}'),
+  (null, 'Cable Crunch', 'Core', '{core}', '{}'),
+  (null, 'Hanging Leg Raise', 'Core', '{core}', '{}')
+on conflict do nothing;
