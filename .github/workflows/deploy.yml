@@ -27,9 +27,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          # npm caching needs a lockfile, which doesn't exist on the very first
-          # run only — the conditional disables caching until it is committed.
-          cache: ${{ hashFiles('package-lock.json') == '' ? '' : 'npm' }}
 
       # One-time bootstrap: this project is built without a local Node install,
       # so the lockfile is generated and committed by CI itself. After this
