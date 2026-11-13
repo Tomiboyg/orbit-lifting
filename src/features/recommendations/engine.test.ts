@@ -106,7 +106,7 @@ function session(
 /** 4 completed weeks × 3 sessions (Mon/Wed/Fri), identical volume every week. */
 function steadyHistory(): RawSet[] {
   return completedMondays(4).flatMap((ws, i) =>
-    [0, 2, 4].map((o) => session(ws + o * DAY, `w${i}-${o}`)),
+    [0, 2, 4].flatMap((o) => session(ws + o * DAY, `w${i}-${o}`)),
   )
 }
 
