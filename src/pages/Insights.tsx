@@ -25,6 +25,7 @@ export function Insights() {
   const [library, setLibrary] = useState<ExerciseDef[]>(FALLBACK_EXERCISES)
   const [muscle, setMuscle] = useState<MuscleGroup>('chest')
   const [perfName, setPerfName] = useState<string | null>(null)
+  const [progressName, setProgressName] = useState<string | null>(null)
   const [dismissOpen, setDismissOpen] = useState(false)
 
   useEffect(() => {
@@ -156,6 +157,27 @@ export function Insights() {
       })),
     }
   }, [sets, perfName, range, settings.weekStartDay])
+
+  /** Top completed-set weight per workout session for the chosen exercise. */
+  const progress: ChartDatum[] | null = useMemo(() => {
+    if (!sets || !progressName) return null
+    const sessions = new Map<string, { at: number; top: number }>()
+    for (const s of sets) {
+      if (!s.completed || s.exerciseName !== progressName || s.weight <= 0) continue
+      const cur = sessions.get(s.workoutId)
+      if (!cur) sessions.set(s.workoutId, { at: s.performedAt, top: s.weight })
+      else {
+        cur.top = Math.max(cur.top, s.weight)
+        cur.at = Math.min(cur.at, s.performedAt)
+      }
+    }
+    return [...sessions.values()]
+      .sort((a, b) => a.at - b.at)
+      .map((s) => ({
+        label: new Date(s.at).toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' }),
+        value: Math.round(s.top * 10) / 10,
+      }))
+  }, [sets, progressName])
 
   const prs = useMemo(() => {
     if (!sets) return []
@@ -334,6 +356,38 @@ export function Insights() {
                 Weighted sets = direct sets (primary muscles, weight 1.0) plus secondary muscles at{' '}
                 {settings.recommendations.secondaryWeight}. The calculation is visible in Settings → Volume counting.
               </p>
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader title="Weight progress" />
+            <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pt-3">
+              {perfOptions.map((name) => (
+                <button
+                  key={name}
+                  onClick={() => setProgressName(name)}
+                  className={cn(
+                    'press shrink-0 rounded-full px-3 py-1.5 text-caption',
+                    progressName === name ? 'bg-accent text-accent-contrast' : 'glass text-text-muted',
+                  )}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+            <div className="px-2 py-3">
+              {progress == null ? (
+                <EmptyInline text="Pick an exercise to see how your top weight moved session by session." />
+              ) : progress.length === 0 ? (
+                <EmptyInline text="No weighted sets for this exercise in this range yet." />
+              ) : (
+                <>
+                  <LineChart data={progress} unit=" kg" />
+                  <p className="px-3 text-caption text-text-muted">
+                    Heaviest completed set of “{progressName}” in each workout session.
+                  </p>
+                </>
+              )}
             </div>
           </Card>
 
