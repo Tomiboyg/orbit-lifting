@@ -127,7 +127,7 @@ export function StepperInput({
   max = 1000,
   inputMode = 'decimal',
   suffix,
-  width = 'w-[76px]',
+  width = 'w-[140px]',
   ariaLabel,
 }: {
   label: string
@@ -158,19 +158,19 @@ export function StepperInput({
           type="button"
           aria-label={`Decrease ${label}`}
           onClick={() => bump(-1)}
-          className="w-9 shrink-0 text-lg text-text-muted press"
+          className="press flex w-10 shrink-0 items-center justify-center text-xl text-text-muted"
         >
           −
         </button>
         <input
-          className={cn(
-            'w-full min-w-0 bg-transparent text-center tabular text-body font-semibold outline-none',
-          )}
+          type="text"
+          className="min-h-[48px] w-full min-w-0 bg-transparent text-center text-headline font-bold tabular outline-none placeholder:font-normal placeholder:text-text-muted"
           value={value}
           inputMode={inputMode}
           pattern={inputMode === 'decimal' ? '[0-9]*[.,]?[0-9]*' : '[0-9]*'}
           aria-label={ariaLabel ?? label}
           placeholder="0"
+          onFocus={(e) => e.target.select()}
           onChange={(e) => onChange(e.target.value.replace(',', '.'))}
           onBlur={onCommit}
         />
@@ -178,7 +178,7 @@ export function StepperInput({
           type="button"
           aria-label={`Increase ${label}`}
           onClick={() => bump(1)}
-          className="w-9 shrink-0 text-lg text-text-muted press"
+          className="press flex w-10 shrink-0 items-center justify-center text-xl text-text-muted"
         >
           +
         </button>
