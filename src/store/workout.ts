@@ -13,6 +13,7 @@ import {
   kvDelete,
   KV_ACTIVE_WORKOUT,
   outboxAll,
+  outboxDelete,
   requestPersistentStorage,
 } from '../lib/idb'
 import { uuid, deviceId } from '../lib/uuid'
@@ -20,6 +21,49 @@ import { enqueueWorkoutSync, isWorkoutSynced, processOutbox } from '../lib/sync'
 import { getSupabase } from '../lib/supabase'
 
 const PERSIST_DEBOUNCE_MS = 250
+
+const PENDING_DISCARDS_KEY = 'orbit.pendingDiscards'
+
+function loadPendingDiscards(): string[] {
+  try {
+    const raw = localStorage.getItem(PENDING_DISCARDS_KEY)
+    const ids = raw ? (JSON.parse(raw) as string[]) : []
+    return Array.isArray(ids) ? ids : []
+  } catch {
+    return []
+  }
+}
+
+function savePendingDiscards(ids: string[]): void {
+  try {
+    localStorage.setItem(PENDING_DISCARDS_KEY, JSON.stringify(ids))
+  } catch {
+    // ignore
+  }
+}
+
+/**
+ * Delete the server copies of discarded workouts (cascades remove their
+ * exercises and sets). Failures stay queued in localStorage and retry on the
+ * next hydrate or reconnect, so a discarded workout never lingers as a
+ * permanently "active" row on the server.
+ */
+export async function purgeDiscardedWorkouts(): Promise<void> {
+  const ids = loadPendingDiscards()
+  if (ids.length === 0) return
+  const supabase = getSupabase()
+  if (!supabase) return
+  const { data } = await supabase.auth.getSession()
+  const userId = data.session?.user?.id
+  if (!userId) return
+  const { error } = await supabase
+    .from('workouts')
+    .delete()
+    .in('id', ids)
+    .eq('user_id', userId)
+  if (error) return
+  savePendingDiscards([])
+}
 
 export interface DeletedSetInfo {
   exerciseId: string
@@ -96,6 +140,7 @@ function attachFlushListeners(): void {
   })
   window.addEventListener('online', () => {
     void useWorkout.getState().retrySync()
+    void purgeDiscardedWorkouts()
   })
 }
 
@@ -143,7 +188,10 @@ export const useWorkout = create<WorkoutState>()((set, get) => {
       void (async () => {
         const supabase = getSupabase()
         const userId = (await supabase?.auth.getUser())?.data.user?.id
-        if (supabase && userId) {
+        // Guard against a discard that happened while awaiting auth: never
+        // enqueue a snapshot for a workout that is no longer active, or the
+        // outbox flush would resurrect it on the server.
+        if (supabase && userId && get().workout?.id === clone.id) {
           await enqueueWorkoutSync(clone, userId)
           set({ syncStatus: 'queued' })
         }
@@ -193,6 +241,7 @@ export const useWorkout = create<WorkoutState>()((set, get) => {
       void processOutbox().then((res) => {
         if (res.failed > 0) set({ syncStatus: 'error' })
       })
+      void purgeDiscardedWorkouts()
     },
 
     async startWorkout(title) {
@@ -410,12 +459,29 @@ export const useWorkout = create<WorkoutState>()((set, get) => {
     async discardWorkout() {
       const w = get().workout
       set({ workout: null, lastDeleted: null })
-      if (w) {
-        try {
-          await kvDelete(KV_ACTIVE_WORKOUT)
-        } catch {
-          // ignore
-        }
+      if (!w) return
+      try {
+        await kvDelete(KV_ACTIVE_WORKOUT)
+      } catch {
+        // ignore
+      }
+      // A discard is an explicit delete: drop the queued sync for this
+      // workout, otherwise a later outbox flush would re-create an active
+      // copy on the server after the local one is gone.
+      try {
+        await outboxDelete(w.id)
+      } catch {
+        // ignore
+      }
+      // Remove the server copy too — otherwise the workout stays "active"
+      // there forever even though it was deleted here. Cascades clean up its
+      // exercises and sets; a no-op when it was never synced. Offline
+      // failures stay queued and retry on the next hydrate/reconnect.
+      try {
+        savePendingDiscards([...new Set([...loadPendingDiscards(), w.id])])
+        await purgeDiscardedWorkouts()
+      } catch {
+        // ignore; retried later
       }
     },
   }

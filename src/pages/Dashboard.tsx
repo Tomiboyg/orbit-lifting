@@ -111,7 +111,16 @@ export function Dashboard() {
         <div className="grid grid-cols-3 gap-2 px-4 py-4 desktop:px-6">
           <Stat label="Workouts" value={weekWorkouts} />
           <Stat label="Sets" value={weekSets} />
-          <Stat label="Insight" value={rec?.result ? `Type ${rec.result.type}` : null} />
+          <Stat
+            label="Insight"
+            value={
+              rec?.result
+                ? rec.result.type === 5
+                  ? 'Not enough data'
+                  : `Type ${rec.result.type}`
+                : null
+            }
+          />
         </div>
       </Card>
 

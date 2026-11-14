@@ -55,11 +55,6 @@ export function Logger() {
 
   useWakeLock(hydrated && !!workout && !workout.finishedAt)
 
-  // No active workout here → offer to start one (keeps /log useful offline).
-  useEffect(() => {
-    if (hydrated && !workout) void startWorkout()
-  }, [hydrated, workout, startWorkout])
-
   // Elapsed time derives from the start timestamp, never a counter (spec 11.5).
   useEffect(() => {
     if (!workout) return
